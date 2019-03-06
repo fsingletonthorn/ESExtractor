@@ -2,20 +2,24 @@
 splitTestStatToDF <- function(statistic, cleanedTestStat) {
   if ((length(cleanedTestStat) > 0) & (length(statistic) > 0)) {
     testStatistic <-
-      stringr::str_extract(stringr::str_split(cleanedTestStat, "=", simplify = T)[, 2],
+      stringr::str_extract(stringr::str_split(cleanedTestStat,
+                                              "=", simplify = T)[, 2],
                            "-?\\d*\\.?\\d*")
     df1 <-
-      case_when(statistic == "F" ~ c(stringr::str_extract(cleanedTestStat, "\\d{1,}(?=,)")),
+      case_when(statistic == "F" ~ c(stringr::str_extract(cleanedTestStat,
+                                                          "\\d{1,}(?=,)")),
                 TRUE ~ NA_character_)
     # Add other statistics here below in addition to F
     df2 <-
       case_when(
-        statistic == "F" ~ stringr::str_extract(cleanedTestStat, "(?<=,)\\d{1,}"),
+        statistic == "F" ~ stringr::str_extract(cleanedTestStat,
+                                                "(?<=,)\\d{1,}"),
         # If people have reported r(n=x) return as n df2 = n - 2
         stringr::str_detect(statistic, "r") &
           stringr::str_detect(cleanedTestStat, "n=") ~
           as.character(as.numeric(
-            stringr::str_extract(cleanedTestStat, "(?<=([a-zA-Z])\\(?(n\\=)?)\\d{1,}")
+            stringr::str_extract(cleanedTestStat,
+                                 "(?<=([a-zA-Z])\\(?(n\\=)?)\\d{1,}")
           ) - 2),
         stringr::str_detect(statistic, "T|t|r|R") ~
           stringr::str_extract(
@@ -70,7 +74,8 @@ addContext <- function(extracted, contextSize) {
 }
 
 # For this to work it needs to be fed a single string
-# function to extract text, remove whitespaces and unicode encodings of the minus sign and return test statistic original data plus df
+# function to extract text, remove whitespaces and unicode encodings of the
+# minus sign and return test statistic original data plus df
 extractTestStats <- function(inputText, context = FALSE, contextSize = 100) {
 
   # patterns -
@@ -179,12 +184,17 @@ extractTestStats <- function(inputText, context = FALSE, contextSize = 100) {
  if(purrr::is_empty(statisticalOutput[[1]]) |  (nrow(statisticalOutput) < 1)) {
    if(context == F) {
      tibble::data_frame(
-       statistic = NA, cleaned = NA, reported = NA, value = NA,  df1 = NA, df2  = NA, p = NA)
+       statistic = NA, cleaned = NA, reported = NA, value = NA,
+       df1 = NA, df2  = NA, p = NA)
      } else {
      tibble::data_frame(
-       statistic = NA, cleaned = NA, reported = NA, context = NA, value = NA,  df1 = NA, df2  = NA, p = NA)
+       statistic = NA, cleaned = NA, reported = NA, context = NA,
+       value = NA,  df1 = NA, df2  = NA, p = NA)
      }
    } else {
-   cbind(statisticalOutput, splitTestStatToDF(statistic = statisticalOutput$statistic, cleanedTestStat = statisticalOutput$cleaned), stringsAsFactors = F)
+   cbind(statisticalOutput,
+         splitTestStatToDF(statistic = statisticalOutput$statistic,
+                           cleanedTestStat = statisticalOutput$cleaned),
+         stringsAsFactors = F)
   }
 }
