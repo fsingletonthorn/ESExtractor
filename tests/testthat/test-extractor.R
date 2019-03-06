@@ -65,11 +65,19 @@ testChi <- c("chi square = 12.32",
              "chi2(123) = 123.2, p < .001",
              "χ2(1, N = 320) = 22.31, p < 0.001")
 
+
+testD <- c("g = 12.32",
+           "d = 1",
+           "d = 1232.23")
+
+testEta <- c()
+
+
 testTString  <- str_flatten(testT, collapse = " ")
 testFString  <- str_flatten(testF, collapse = " ")
 testRString  <- str_flatten(testR, collapse = " ")
 testChiString  <- str_flatten(testChi, collapse = " ")
-
+testDString <- str_flatten(testD, collapse = " ")
 
 
 test_that("t test extractor works", {
@@ -100,3 +108,9 @@ test_that("", {
                    str_remove_all(testChi, "\\s"))
 })
 
+test_that("cohen's d extractor works", {
+  expect_identical(extractTestStats(testDString)[[3]], testD)
+  expect_identical(extractTestStats(testDString)[[2]],
+                   str_remove_all(testD, "\\s"))
+}
+)
