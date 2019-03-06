@@ -12,9 +12,9 @@
 #   Build and Reload Package:  'Ctrl + Shift + B'
 #   Check Package:             'Ctrl + Shift + E'
 #   Test Package:              'Ctrl + Shift + T'
+# lintr::lint_package()
+
 
 hello <- function() {
   print("Hello, world")
 }
-
-# usethis::use_test()
